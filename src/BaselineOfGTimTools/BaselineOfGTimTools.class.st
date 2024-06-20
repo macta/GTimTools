@@ -11,3 +11,18 @@ BaselineOfGTimTools >> baseline: spec [
 			spec package: 'GTimTools'
 		]
 ]
+
+{ #category : #accessing }
+BaselineOfGTimTools >> loadLepiter [
+	IceRepository registry  
+		detect: [ :aRepository |
+			aRepository name = 'GTimTools' ]
+		ifFound: [ :aRepository | 
+			| defaultDatabase currentProperties |
+			defaultDatabase := LeDatabasesRegistry defaultLogicalDatabase.
+			currentProperties := defaultDatabase properties.
+			currentProperties addRegisteredDirectory: aRepository repositoryDirectory / 'lepiter'.
+			defaultDatabase reload ]
+		ifNone: [
+			self inform: 'Repository not found.' ]
+]
