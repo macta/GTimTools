@@ -4,16 +4,8 @@ Class {
 	#category : #BaselineOfGTimTools
 }
 
-{ #category : #baseline }
-BaselineOfGTimTools >> baseline: spec [
-	<baseline>
-		^ spec for: #common do: [
-			spec package: 'GTimTools'
-		]
-]
-
 { #category : #accessing }
-BaselineOfGTimTools >> loadLepiter [
+BaselineOfGTimTools class >> loadLepiter [
 	IceRepository registry  
 		detect: [ :aRepository |
 			aRepository name = 'GTimTools' ]
@@ -25,4 +17,12 @@ BaselineOfGTimTools >> loadLepiter [
 			defaultDatabase reload ]
 		ifNone: [
 			self inform: 'Repository not found.' ]
+]
+
+{ #category : #baseline }
+BaselineOfGTimTools >> baseline: spec [
+	<baseline>
+		^ spec for: #common do: [
+			spec package: 'GTimTools'
+		]
 ]
