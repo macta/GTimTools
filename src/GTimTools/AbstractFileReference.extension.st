@@ -1,7 +1,7 @@
 Extension { #name : #AbstractFileReference }
 
 { #category : #'*GTimTools' }
-AbstractFileReference >> decodedContents [
+AbstractFileReference >> contentsDecoded [
 	| encoding |
 	encoding := [ self
 			binaryReadStreamDo: [ :in | (ZnCharacterEncoder tmDetectEncoding: in upToEnd) identifier ] ]
