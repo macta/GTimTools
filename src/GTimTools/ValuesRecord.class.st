@@ -1,5 +1,8 @@
+"
+I am collection of key/value pairs that record a useful interaction that can be explored in a GtView via a `ValuesRecorder`.
+"
 Class {
-	#name : #InvestigationResult,
+	#name : #ValuesRecord,
 	#superclass : #Object,
 	#instVars : [
 		'isRecording',
@@ -9,13 +12,15 @@ Class {
 }
 
 { #category : #accessing }
-InvestigationResult >> complete [
+ValuesRecord >> complete [
+	"Finish recording values and return captured keys suitable for an InvestigationTemplate view"
+	
 	isRecording := false.
 	^templateValues keys
 ]
 
 { #category : #accessing }
-InvestigationResult >> doesNotUnderstand: aMessage [
+ValuesRecord >> doesNotUnderstand: aMessage [
 	isRecording ifFalse: [ ^ super doesNotUnderstand: aMessage ].
 	aMessage numArgs = 1
 		ifTrue: [ self templateValues at: aMessage selector put: aMessage argument ]
@@ -23,11 +28,11 @@ InvestigationResult >> doesNotUnderstand: aMessage [
 ]
 
 { #category : #accessing }
-InvestigationResult >> gtValuesFor: composite [
+ValuesRecord >> gtDetailsFor: aView [
 	<gtView>
 	
-	^composite columnedList
-		title: 'Values';
+	^aView columnedList
+		title: 'Details';
 		priority: 60;
 		items: [ self templateValues associations ];
 		column: 'attribute' text: [:v | v key allButLast ];
@@ -39,17 +44,17 @@ InvestigationResult >> gtValuesFor: composite [
 ]
 
 { #category : #accessing }
-InvestigationResult >> initialize [
+ValuesRecord >> initialize [
 	super initialize.
 	isRecording := true.
 ]
 
 { #category : #accessing }
-InvestigationResult >> templateValues [
+ValuesRecord >> templateValues [
 	^templateValues ifNil: [templateValues := Dictionary new]
 ]
 
 { #category : #accessing }
-InvestigationResult >> valueFor: aSelector [
+ValuesRecord >> valueFor: aSelector [
 	^self templateValues at: aSelector ifAbsent: [ nil ]
 ]

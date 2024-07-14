@@ -1,5 +1,18 @@
+"
+I am a template suitable for capturing arbitrary values to later explore in a GTColumnView .
+
+Instantiate an instance and use like this:
+```
+interestingThings := ValuesRecorder new. 
+
+srcFiles allFiles do:[:f | 
+   ""Do some operations""
+   interestingFiles record: [ :r | r name: f basename; file: f]].
+```
+
+"
 Class {
-	#name : #InvestigationTemplate,
+	#name : #ValuesRecorder,
 	#superclass : #Object,
 	#instVars : [
 		'measures',
@@ -12,17 +25,17 @@ Class {
 }
 
 { #category : #accessing }
-InvestigationTemplate >> attributes [
+ValuesRecorder >> attributes [
 	^attributes ifNil: [ attributes := Set new ]
 ]
 
 { #category : #accessing }
-InvestigationTemplate >> capturedValues [
+ValuesRecorder >> capturedValues [
 	^capturedValues ifNil: [ capturedValues := OrderedCollection new ]
 ]
 
 { #category : #accessing }
-InvestigationTemplate >> gtValuesFor: composite [
+ValuesRecorder >> gtDetailsFor: composite [
 	<gtView>
 	| list |
 	list := composite columnedList
@@ -39,10 +52,10 @@ InvestigationTemplate >> gtValuesFor: composite [
 ]
 
 { #category : #accessing }
-InvestigationTemplate >> record: aBlock [
+ValuesRecorder >> record: aBlock [
 	| investigation |
 	[ 
-	investigation := InvestigationResult new.
+	investigation := ValuesRecord new.
 	aBlock value: investigation ]
 		ensure: [ 
 			self attributes addAll: investigation complete.
