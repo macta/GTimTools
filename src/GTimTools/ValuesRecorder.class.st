@@ -15,11 +15,10 @@ Class {
 	#name : #ValuesRecorder,
 	#superclass : #Object,
 	#instVars : [
-		'measures',
-		'templateValues',
-		'currentInvestigation',
+		'isRecording',
 		'capturedValues',
-		'attributes'
+		'attributes',
+		'defaultAttribute'
 	],
 	#category : #GTimTools
 }
@@ -35,6 +34,16 @@ ValuesRecorder >> capturedValues [
 ]
 
 { #category : #accessing }
+ValuesRecorder >> defaultAttribute [
+	^ defaultAttribute ifNil: [ defaultAttribute := self attributes anyOne ]
+]
+
+{ #category : #accessing }
+ValuesRecorder >> defaultAttribute: anObject [
+	defaultAttribute := anObject
+]
+
+{ #category : #accessing }
 ValuesRecorder >> gtDetailsFor: composite [
 	<gtView>
 	| list |
@@ -45,6 +54,26 @@ ValuesRecorder >> gtDetailsFor: composite [
 		send: #yourself;
 		yourself.
 		
+		
+	list actionDropdownButtonIcon: BrGlamorousVectorIcons target 
+		tooltip: 'Set focus item' 
+		content: [ :aButton | |l| (l := BrSimpleList new)
+				items: self attributes asOrderedCollection;
+				itemStencil: [
+					BrButton new
+						vFitContent;
+						aptitude: BrGlamorousLabelAptitude new + BrGlamorousListItemAptitude 
+						 ];
+
+				itemDataBinder: [ :eachButton :eachItem :eachIndex | 
+					eachButton 
+						label: eachItem allButLast;
+						action: [ :aButtonElement | 
+							self defaultAttribute: eachItem.
+							 ] ];
+					
+				yourself].
+		
 	self attributes do: [:each |
 	  list column: each allButLast text: [:item | item valueFor: each ]].
 	  
@@ -52,12 +81,24 @@ ValuesRecorder >> gtDetailsFor: composite [
 ]
 
 { #category : #accessing }
+ValuesRecorder >> isRecording [
+	^ isRecording
+]
+
+{ #category : #accessing }
+ValuesRecorder >> isRecording: anObject [
+	isRecording := anObject
+]
+
+{ #category : #accessing }
 ValuesRecorder >> record: aBlock [
 	| investigation |
 	[ 
-	investigation := ValuesRecord new.
+	investigation := ValuesRecord for: self.
+	self isRecording: true.
 	aBlock value: investigation ]
 		ensure: [ 
+			self isRecording: false.
 			self attributes addAll: investigation complete.
 			self capturedValues add: investigation ]
 ]
