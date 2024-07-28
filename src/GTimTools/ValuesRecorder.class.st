@@ -15,13 +15,17 @@ Class {
 	#name : #ValuesRecorder,
 	#superclass : #Object,
 	#instVars : [
-		'isRecording',
 		'capturedValues',
-		'attributes',
-		'defaultAttribute'
+		'attributes'
 	],
 	#category : #GTimTools
 }
+
+{ #category : #accessing }
+ValuesRecorder >> addRecord: aRecord [
+	self attributes addAll: aRecord names.
+	^self capturedValues add: aRecord
+]
 
 { #category : #accessing }
 ValuesRecorder >> attributes [
@@ -31,16 +35,6 @@ ValuesRecorder >> attributes [
 { #category : #accessing }
 ValuesRecorder >> capturedValues [
 	^capturedValues ifNil: [ capturedValues := OrderedCollection new ]
-]
-
-{ #category : #accessing }
-ValuesRecorder >> defaultAttribute [
-	^ defaultAttribute ifNil: [ defaultAttribute := self attributes anyOne ]
-]
-
-{ #category : #accessing }
-ValuesRecorder >> defaultAttribute: anObject [
-	defaultAttribute := anObject
 ]
 
 { #category : #accessing }
@@ -67,7 +61,7 @@ ValuesRecorder >> gtDetailsFor: composite [
 
 				itemDataBinder: [ :eachButton :eachItem :eachIndex | 
 					eachButton 
-						label: eachItem allButLast;
+						label: eachItem ;
 						action: [ :aButtonElement | 
 							self defaultAttribute: eachItem.
 							 ] ];
@@ -75,30 +69,12 @@ ValuesRecorder >> gtDetailsFor: composite [
 				yourself].
 		
 	self attributes do: [:each |
-	  list column: each allButLast text: [:item | item valueFor: each ]].
+	  list column: each text: [:item | item valueFor: each ]].
 	  
 	^list
 ]
 
 { #category : #accessing }
-ValuesRecorder >> isRecording [
-	^ isRecording
-]
-
-{ #category : #accessing }
-ValuesRecorder >> isRecording: anObject [
-	isRecording := anObject
-]
-
-{ #category : #accessing }
-ValuesRecorder >> record: aBlock [
-	| investigation |
-	[ 
-	investigation := ValuesRecord for: self.
-	self isRecording: true.
-	aBlock value: investigation ]
-		ensure: [ 
-			self isRecording: false.
-			self attributes addAll: investigation complete.
-			self capturedValues add: investigation ]
+ValuesRecorder >> record: associationsArray [
+	^self addRecord: (ValuesRecord for: associationsArray)
 ]
