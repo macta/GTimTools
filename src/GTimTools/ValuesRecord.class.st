@@ -29,6 +29,11 @@ ValuesRecord >> at: symbolName put: anObject [
 
 { #category : #accessing }
 ValuesRecord >> defaultViewFor: anObject [
+	^(anObject gtViewsInContext: GtPhlowContext new) first
+]
+
+{ #category : #accessing }
+ValuesRecord >> defaultViewFromPragmaFor: anObject [
 	| pragmas views |
 	
 	pragmas := ((anObject class withAllSuperclasses) flatCollect: [ :c | c pragmas ])

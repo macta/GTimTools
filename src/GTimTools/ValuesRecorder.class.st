@@ -63,7 +63,8 @@ ValuesRecorder >> gtDetailsFor: composite [
 					eachButton 
 						label: eachItem ;
 						action: [ :aButtonElement | 
-							self defaultAttribute: eachItem.
+							"self defaultAttribute: eachItem."
+							aButton dispatchEvent: BrDropdownHideWish new 
 							 ] ];
 					
 				yourself].
